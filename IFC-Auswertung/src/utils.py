@@ -1,0 +1,1 @@
+# Hilfsfunktionen, z. B. für Logs oder Fehlerbehandlung
