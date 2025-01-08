@@ -12,11 +12,15 @@ def load_ifc_data(file_path):
         found_classification = False
         found_building_id = False
         found_room_name = False
+        found_flooring = False  # Neue Variable für Bodenbelag
+        found_wall_cladding = False  # Neue Variable für Wandbekleidung
         area = None
         height = None
         classification = None
         building_id = None
         room_name = None
+        flooring = None  # Neue Variable für Bodenbelag
+        wall_cladding = None  # Neue Variable für Wandbekleidung
         apartment_id = raum_name[:-2]
 
         for rel in room.IsDefinedBy:
@@ -59,6 +63,20 @@ def load_ifc_data(file_path):
                                     found_room_name = True
                                 except ValueError as e:
                                     print(f"Fehler beim Konvertieren des Raumnamens: {e}")
+                        if prop.Name == "Bodenbelag":  # Neue Bedingung für Bodenbelag
+                            if prop.is_a("IfcPropertySingleValue"):
+                                try:
+                                    flooring = str(prop.NominalValue.wrappedValue)
+                                    found_flooring = True
+                                except ValueError as e:
+                                    print(f"Fehler beim Konvertieren des Bodenbelags: {e}")
+                        if prop.Name == "Wandbekleidung":  # Neue Bedingung für Wandbekleidung
+                            if prop.is_a("IfcPropertySingleValue"):
+                                try:
+                                    wall_cladding = str(prop.NominalValue.wrappedValue)
+                                    found_wall_cladding = True
+                                except ValueError as e:
+                                    print(f"Fehler beim Konvertieren der Wandbekleidung: {e}")
 
         if found_area or found_height or found_classification or found_building_id or found_room_name:
             raum_daten[raum_name] = {
@@ -67,6 +85,8 @@ def load_ifc_data(file_path):
                 "Raumklassifikation": classification if found_classification else None,
                 "Gebäude-ID": building_id if found_building_id else None,
                 "Raumname": room_name if found_room_name else None,
+                "Bodenbelag": flooring if found_flooring else None,  # Neues Attribut
+                "Wandbekleidung": wall_cladding if found_wall_cladding else None,  # Neues Attribut
                 "Wohnung-ID": apartment_id
             }
 

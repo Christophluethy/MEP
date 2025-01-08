@@ -38,7 +38,8 @@ def create_gui():
     details_frame.pack(pady=20, padx=20, fill="both", expand=True)
 
     # Treeview für die Raumdetails
-    columns = ["Raum-ID", "Raumname", "Nettofläche (m²)", "Höhe im Licht (m)", "Raumklassifikation", "Gebäude-ID"]
+    columns = ["Raum-ID", "Raumname", "Nettofläche (m²)", "Höhe im Licht (m)", "Raumklassifikation", "Gebäude-ID", 
+               "Bodenbelag", "Wandbekleidung"]  # Neue Spalten hinzufügen
     details_tree = ttk.Treeview(details_frame, columns=columns, show="headings", height=12)
     details_tree.pack(fill="both", expand=True)
 
@@ -80,7 +81,9 @@ def create_gui():
                     eigenschaften["Nettofläche"],
                     eigenschaften["Höhe im Licht"],
                     eigenschaften["Raumklassifikation"],
-                    eigenschaften["Gebäude-ID"]
+                    eigenschaften["Gebäude-ID"],
+                    eigenschaften["Bodenbelag"],  # Neues Attribut
+                    eigenschaften["Wandbekleidung"]  # Neues Attribut
                 ))
         else:
             for raum_name, eigenschaften in sorted(raum_daten.items()):
@@ -91,7 +94,9 @@ def create_gui():
                         eigenschaften["Nettofläche"],
                         eigenschaften["Höhe im Licht"],
                         eigenschaften["Raumklassifikation"],
-                        eigenschaften["Gebäude-ID"]
+                        eigenschaften["Gebäude-ID"],
+                        eigenschaften["Bodenbelag"],  # Neues Attribut
+                        eigenschaften["Wandbekleidung"]  # Neues Attribut
                     ))
         apply_alternate_row_colors()
 
