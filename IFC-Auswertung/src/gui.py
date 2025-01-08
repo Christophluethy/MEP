@@ -75,6 +75,8 @@ def create_gui():
         for item in details_tree.get_children():
             details_tree.delete(item)
 
+        total_area = 0  # Variable für die Gesamtfläche
+
         if selected == "Alle Wohnungen":
             for raum_name, eigenschaften in sorted(raum_daten.items()):
                 values = [
@@ -89,6 +91,8 @@ def create_gui():
                 ]
                 filtered_values = [val if col in visible_columns else "" for col, val in zip(columns, values)]
                 details_tree.insert("", "end", values=filtered_values)
+                if eigenschaften["Nettofläche"] is not None:
+                    total_area += eigenschaften["Nettofläche"]
         else:
             for raum_name, eigenschaften in sorted(raum_daten.items()):
                 if eigenschaften["Wohnung-ID"] == selected:
@@ -104,6 +108,17 @@ def create_gui():
                     ]
                     filtered_values = [val if col in visible_columns else "" for col, val in zip(columns, values)]
                     details_tree.insert("", "end", values=filtered_values)
+                    if eigenschaften["Nettofläche"] is not None:
+                        total_area += eigenschaften["Nettofläche"]
+
+        # Leere Zeile hinzufügen
+        details_tree.insert("", "end", values=("", "", "", "", "", "", "", ""))
+
+        # Gesamtfläche als letzte Zeile hinzufügen
+        details_tree.insert("", "end", values=("Nettowohnfläche [m²]", "", round(total_area, 2), "", "", "", "", ""), tags=("total",))
+
+        # Formatierung für Gesamtfläche
+        details_tree.tag_configure("total", font=("Helvetica", font_size, "bold"), background="#e0e0e0")
 
         apply_alternate_row_colors()
 
