@@ -4,11 +4,13 @@ from tkinter import ttk, filedialog
 import pandas as pd
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
-from ifc_handler import raum_daten
+from ifc_handler import load_ifc_data  # Importieren der Funktion aus ifc_handler
 
+# Globale Variable für raum_daten
+raum_daten = {}
 
 # Funktion zum Erstellen des GUI
-def create_gui(raum_daten):
+def create_gui():
     # Root-Fenster erstellen
     root = ctk.CTk()
     root.title("Raumdaten Anzeige")
@@ -24,12 +26,12 @@ def create_gui(raum_daten):
 
     # Dropdown für Wohnungsauswahl erstellen
     selected_apartment = tk.StringVar()
-    apartments = sorted(set([eigenschaften["Wohnung-ID"] for eigenschaften in raum_daten.values()]))
+    apartments = ["Alle Wohnungen"]  # Standardwert als erstes Element
 
-    dropdown = ttk.Combobox(root, textvariable=selected_apartment, values=["Alle Wohnungen"] + apartments,
+    dropdown = ttk.Combobox(root, textvariable=selected_apartment, values=apartments,
                             state="readonly", font=font)
     dropdown.pack(pady=10)
-    dropdown.set("Wähle eine Wohnung aus")
+    dropdown.set("Alle Wohnungen")  # Standardwert setzen
 
     # Frame für die Raumdetails
     details_frame = ctk.CTkFrame(root)
@@ -94,6 +96,31 @@ def create_gui(raum_daten):
         apply_alternate_row_colors()
 
     dropdown.bind("<<ComboboxSelected>>", load_apartment_details)
+
+    # Funktion, um IFC-Datei zu laden
+    def load_ifc_file():
+        global raum_daten  # Benutzen der globalen raum_daten-Variable
+        # Öffnet ein Dialogfenster, um die Datei auszuwählen
+        file_path = filedialog.askopenfilename(title="IFC-Datei auswählen", filetypes=[("IFC-Dateien", "*.ifc")])
+
+        if file_path:
+            # Wenn eine Datei ausgewählt wurde, dann die IFC-Datei laden
+            print(f"Datei ausgewählt: {file_path}")
+            raum_daten = load_ifc_data(file_path)  # IFC-Daten laden und zurückbekommen
+
+            # Dropdown mit den Wohnungen aktualisieren
+            apartments = sorted(set([eigenschaften["Wohnung-ID"] for eigenschaften in raum_daten.values()]))
+            apartments.insert(0, "Alle Wohnungen")  # "Alle Wohnungen" als erste Option hinzufügen
+            dropdown['values'] = apartments  # Dropdown mit neuen Werten füllen
+            dropdown.set("Alle Wohnungen")  # Standardwert setzen
+
+            # Funktion zum Laden der Rauminformationen erneut aufrufen
+            load_apartment_details()  # Details neu laden (mit den geladenen Daten)
+        else:
+            print("Keine Datei ausgewählt.")
+
+    load_button = ctk.CTkButton(root, text="IFC-Datei laden", command=load_ifc_file, font=font)
+    load_button.pack(pady=10)
 
     # Diagramm anzeigen/ausblenden
     diagram_canvas = None  # Canvas-Referenz speichern
@@ -175,6 +202,5 @@ def export_to_excel(tree):
     else:
         print("Export abgebrochen.")
 
-
 # GUI starten
-create_gui(raum_daten)
+create_gui()
