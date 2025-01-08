@@ -3,8 +3,8 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 import pandas as pd
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import matplotlib.pyplot as plt  # <-- Achte darauf, dass diese Zeile vorhanden ist
-from ifc_handler import load_ifc_data  # Importieren der Funktion aus ifc_handler
+import matplotlib.pyplot as plt
+from ifc_handler import load_ifc_data
 
 # Globale Variable für raum_daten
 raum_daten = {}
@@ -14,14 +14,19 @@ def create_gui():
     # Root-Fenster erstellen
     root = ctk.CTk()
     root.title("Raumdaten Anzeige")
-    root.geometry("900x600")  # Fenstergröße anpassen
+    root.geometry("900x600") 
+    root.iconbitmap("C:\\Users\\clu\\OneDrive - Hochschule Luzern\\HS24\\DT_Programm\\DT_Project\\IFC-Auswertung\\src\\favicon.ico") 
+
+    # Hintergrund des Fensters auf Weiß setzen
+    root.configure(fg_color="antique white")
 
     # Schriftgröße definieren
     font_size = 16
     font = ("Helvetica", font_size)
 
     # Titel hinzufügen
-    title_label = ctk.CTkLabel(root, text="Raumübersicht", font=("Helvetica", font_size + 4, "bold"))
+    title_label = ctk.CTkLabel(root, text="Raumübersicht", font=("Helvetica", font_size + 4, "bold"), text_color="black")
+
     title_label.pack(pady=10)
 
     # Dropdown für Wohnungsauswahl erstellen
@@ -34,7 +39,7 @@ def create_gui():
     dropdown.set("Alle Wohnungen")  # Standardwert setzen
 
     # Frame für die Raumdetails
-    details_frame = ctk.CTkFrame(root)
+    details_frame = ctk.CTkFrame(root, fg_color="white")  # Hintergrund auf Weiß setzen
     details_frame.pack(pady=20, padx=20, fill="both", expand=True)
 
     # Spalten definieren
@@ -56,7 +61,7 @@ def create_gui():
         details_tree.column(col, width=200, anchor="w")
 
     export_button = ctk.CTkButton(root, text="Exportieren nach Excel",
-                                  command=lambda: export_to_excel(details_tree, visible_columns), font=font)
+                                  command=lambda: export_to_excel(details_tree, visible_columns), font=font, text_color="black", fg_color="navajo white")
     export_button.pack(pady=10)
 
     # Funktion, um Raumdetails zu laden
@@ -137,7 +142,7 @@ def create_gui():
         else:
             print("Keine Datei ausgewählt.")
 
-    load_button = ctk.CTkButton(root, text="IFC-Datei laden", command=load_ifc_file, font=font)
+    load_button = ctk.CTkButton(root, text="IFC-Datei laden", command=load_ifc_file, font=font, text_color="black", fg_color="navajo white")
     load_button.pack(pady=10)
 
     # Funktion zum Umschalten der Sichtbarkeit einer Spalte
@@ -196,7 +201,7 @@ def create_gui():
         # Diagramm rendern
         diagram_canvas.draw()
 
-    diagram_button = ctk.CTkButton(root, text="Diagramm", command=toggle_diagram, font=font)
+    diagram_button = ctk.CTkButton(root, text="Diagramm", command=toggle_diagram, font=font, text_color="black", fg_color="navajo white")
     diagram_button.pack(pady=10)
 
     # Sauberes Schließen des Fensters
