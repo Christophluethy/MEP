@@ -45,24 +45,15 @@ def create_gui():
     details_tree = ttk.Treeview(details_frame, columns=columns, show="headings", height=12)
     details_tree.pack(fill="both", expand=True)
 
-    for col in columns:
-        details_tree.heading(col, text=col, anchor="w", command=lambda c=col: toggle_column(c))
-        details_tree.column(col, width=200, anchor="w")
-
-    # Schriftgröße für Treeview-Tabelle anpassen
+    # Setze die Schriftgröße für Treeview
     style = ttk.Style()
     style.configure("Treeview", font=("Helvetica", font_size))
     style.configure("Treeview.Heading", font=("Helvetica", font_size + 2, "bold"))
+    style.configure("Treeview", rowheight=30)  # Zeilenhöhe erhöhen
 
-    def apply_alternate_row_colors():
-        for i, item in enumerate(details_tree.get_children()):
-            if i % 2 == 0:
-                details_tree.item(item, tags=("even",))
-            else:
-                details_tree.item(item, tags=("odd",))
-
-        details_tree.tag_configure("even", background="#f0f0f0")
-        details_tree.tag_configure("odd", background="white")
+    for col in columns:
+        details_tree.heading(col, text=col, anchor="w", command=lambda c=col: toggle_column(c))
+        details_tree.column(col, width=200, anchor="w")
 
     export_button = ctk.CTkButton(root, text="Exportieren nach Excel",
                                   command=lambda: export_to_excel(details_tree, visible_columns), font=font)
@@ -115,7 +106,7 @@ def create_gui():
         details_tree.insert("", "end", values=("", "", "", "", "", "", "", ""))
 
         # Gesamtfläche als letzte Zeile hinzufügen
-        details_tree.insert("", "end", values=("Nettowohnfläche [m²]", "", round(total_area, 2), "", "", "", "", ""), tags=("total",))
+        details_tree.insert("", "end", values=("Gesamtfläche", "", round(total_area, 2), "", "", "", "", ""), tags=("total",))
 
         # Formatierung für Gesamtfläche
         details_tree.tag_configure("total", font=("Helvetica", font_size, "bold"), background="#e0e0e0")
@@ -239,6 +230,16 @@ def export_to_excel(tree, visible_columns):
         print(f"Daten wurden in '{file_path}' exportiert.")
     else:
         print("Export abgebrochen.")
+
+def apply_alternate_row_colors():
+    for i, item in enumerate(details_tree.get_children()):
+        if i % 2 == 0:  # Für gerade Zeilen
+            details_tree.item(item, tags=("even",))
+        else:  # Für ungerade Zeilen
+            details_tree.item(item, tags=("odd",))
+
+    details_tree.tag_configure("even", background="#f2f2f2")
+    details_tree.tag_configure("odd", background="#ffffff")
 
 # GUI starten
 create_gui()
