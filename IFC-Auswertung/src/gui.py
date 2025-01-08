@@ -106,7 +106,7 @@ def create_gui():
         details_tree.insert("", "end", values=("", "", "", "", "", "", "", ""))
 
         # Gesamtfläche als letzte Zeile hinzufügen
-        details_tree.insert("", "end", values=("Gesamtfläche", "", round(total_area, 2), "", "", "", "", ""), tags=("total",))
+        details_tree.insert("", "end", values=("Nettowohnfläche (m²)", "", round(total_area, 2), "", "", "", "", ""), tags=("total",))
 
         # Formatierung für Gesamtfläche
         details_tree.tag_configure("total", font=("Helvetica", font_size, "bold"), background="#e0e0e0")
