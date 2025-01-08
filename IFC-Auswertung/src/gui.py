@@ -176,7 +176,7 @@ def create_gui():
         for raum, eigenschaften in raum_daten.items():
             if selected == "Alle Wohnungen" or eigenschaften["Wohnung-ID"] == selected:
                 if eigenschaften["Nettofläche"] is not None:
-                    labels.append(raum)
+                    labels.append(eigenschaften["Raumname"])  # Raumname statt Raum-ID
                     values.append(eigenschaften["Nettofläche"])
 
         if not labels:  # Keine Daten für Diagramm
@@ -184,13 +184,13 @@ def create_gui():
 
         # Matplotlib-Figure erstellen
         fig, ax = plt.subplots(figsize=(10, 6))
-        ax.bar(labels, values, color="skyblue")
+        ax.bar(labels, values, color="bisque")
         ax.set_title(f"Nettofläche für {'alle Wohnungen' if selected == 'Alle Wohnungen' else selected}",
                      fontsize=16, weight="bold")
-        ax.set_xlabel("Raum-ID", fontsize=12)
-        ax.set_ylabel("Nettofläche (m²)", fontsize=12)
-        ax.tick_params(axis='x', rotation=45, labelsize=10)
-        ax.tick_params(axis='y', labelsize=10)
+        ax.set_xlabel("Raumname", fontsize=15, weight="bold")
+        ax.set_ylabel("Nettofläche (m²)", fontsize=15, weight="bold")
+        ax.tick_params(axis='x', labelsize=12)
+        ax.tick_params(axis='y', labelsize=12)
         fig.tight_layout()
 
         # Diagramm in GUI einbetten
